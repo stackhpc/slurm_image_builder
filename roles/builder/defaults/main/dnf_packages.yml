@@ -41,11 +41,28 @@ dnf_latest_packages: # list of packages to install using dnf
   # https://github.com/OSC/ood-ansible/blob/master/vars/Rocky.yml
   - lua-posix
 
+  # https://github.com/stackhpc/ansible-role-cluster-nfs/blob/master/tasks/main.yml
+  - nfs-utils
+
+  # https://github.com/stackhpc/ansible-slurm-appliance/blob/main/ansible/roles/podman/tasks/prereqs.yml
+  - podman
+  - python3
+
+  # https://github.com/stackhpc/ansible-slurm-appliance/blob/main/ansible/roles/openondemand/tasks/vnc_compute.yml
+  - nmap-ncat
+  - '@Xfce'
+
+  # https://github.com/cloudalchemy/ansible-grafana/blob/master/vars/redhat.yml
+  - chkconfig
+
 dnf_specific_packages:
   # done separately as @ruby and @nodejs are el8.4 modules which breaks if requiring latest, as for above
   # https://github.com/OSC/ood-ansible/blob/master/vars/Rocky.yml
   - '@ruby:2.7'
   - '@nodejs:12'
+  
+  # https://github.com/stackhpc/ansible-slurm-appliance/blob/main/ansible/roles/openondemand/tasks/vnc_compute.yml
+  - turbovnc-2.2.7
   
   # https://github.com/OSC/ood-ansible/blob/master/tasks/install-rpm.yml
   - ondemand

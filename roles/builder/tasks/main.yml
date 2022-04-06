@@ -1,0 +1,48 @@
+---
+
+- name: Install rpm keys
+  ansible.builtin.rpm_key:
+    key: "{{ item }}"
+    state: present
+  loop: "{{ rpm_keys }}"
+
+- name: Add dnf repos
+  ansible.builtin.get_url:
+    url: "{{ item }}"
+    dest: "/etc/yum.repos.d/{{ item.split('/')[-1] }}"
+  loop: "{{ dnf_add_repos }}"
+
+- name: Enable dnf repos
+  # NB: Doesn't use `dnf config-manager --set-enabled ...` as can't make that idempotent
+  lineinfile:
+    path: "{{ item }}"
+    create: false # raises error if not already installed
+    regexp: enabled=
+    line: enabled=1
+  loop: "{{ dnf_enabled_repos }}"    
+
+# - name: Upgrade dnf packages
+#   dnf:
+#     name: '*'
+#     state: latest
+#     exclude: "{{ dnf_update_exclude }}"
+- name: Reboot if required due to package upgrades
+  reboot:
+    post_reboot_delay: 30
+  when: lookup('fileglob', '/var/run/reboot-required') | length > 0
+
+- name: Wait for hosts to be reachable
+  wait_for_connection:
+  sleep: 15
+
+- name: Install dnf pre-packages
+  dnf: "{{ item }}"
+  loop: "{{ dnf_pre_packages }}"
+
+- name: Install dnf packages
+  dnf:
+    name: "{{ dnf_packages }}"
+    state: latest
+
+
+- meta: end_here

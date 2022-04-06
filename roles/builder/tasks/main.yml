@@ -26,6 +26,7 @@
 #     name: '*'
 #     state: latest
 #     exclude: "{{ dnf_update_exclude }}"
+
 - name: Reboot if required due to package upgrades
   reboot:
     post_reboot_delay: 30
@@ -33,16 +34,20 @@
 
 - name: Wait for hosts to be reachable
   wait_for_connection:
-  sleep: 15
+    sleep: 15
 
-- name: Install dnf pre-packages
+- name: Install dnf release packages
   dnf: "{{ item }}"
-  loop: "{{ dnf_pre_packages }}"
+  loop: "{{ dnf_release_packages }}"
 
-- name: Install dnf packages
+- name: Install latest dnf packages
   dnf:
-    name: "{{ dnf_packages }}"
+    name: "{{ dnf_latest_packages }}"
     state: latest
+
+- name: Install dnf packages:2
+  dnf:
+    name: "{{ dnf_specific_packages }}"
 
 
 - meta: end_here

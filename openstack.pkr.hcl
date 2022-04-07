@@ -1,5 +1,5 @@
 # Use like:
-#   $ PACKER_LOG=1 packer build --on-error=ask -var-file=<something>.pkrvars.hcl openstack.pkr.hcl
+#  $ PACKER_LOG=1 packer build --on-error=ask -var-file=<something>.pkrvars.hcl openstack.pkr.hcl
 
 # "timestamp" template function replacement:s
 locals { timestamp = formatdate("YYMMDD-hhmm", timestamp())}

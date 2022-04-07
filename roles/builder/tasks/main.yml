@@ -1,3 +1,14 @@
+- name: Get builder commit
+  shell:
+    cmd: git describe --all --long --dirty
+  register: builder_commit
+  delegate_to: localhost
+
+- name: Write builder commit to /var/lib/misc/build.txt
+  copy:
+    dest: /var/lib/misc/build.txt
+    content: "{{ builder_commit.stdout }}"
+    
 - import_tasks: dnf_packages.yml
 - import_tasks: prometheus.yml
 - import_tasks: nodeexporter.yml

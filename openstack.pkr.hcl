@@ -64,7 +64,7 @@ source "openstack" "openhpc" {
   ssh_bastion_username = "${var.ssh_bastion_username}"
   ssh_bastion_private_key_file = "${var.ssh_bastion_private_key_file}"
   security_groups = "${var.security_groups}"
-  image_name = "ohpc-${source.name}-${local.timestamp}.qcow2"
+  image_name = "${source.name}-${local.timestamp}.qcow2"
 }
 
 build {

@@ -3,7 +3,7 @@
 - name: Add Grafana repository file [RHEL/CentOS]
   template:
     src: grafana.repo.j2
-    dest: "/etc/yum.repos.d/grafana.repo }}"
+    dest: /etc/yum.repos.d/grafana.repo
     force: true
     backup: true
 

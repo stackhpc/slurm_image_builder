@@ -75,6 +75,8 @@ build {
     playbook_file = "playbooks/build.yml" # can't use ansible FQCN here
     use_proxy = false # see https://www.packer.io/docs/provisioners/ansible#troubleshooting
     extra_arguments = ["-v"]
+    # ansible_ssh_common_args: '-o ProxyCommand="ssh {{ bastion_user }}@{{ bastion_ip }} -W %h:%p"'
+    ansible_ssh_extra_args = ["-o ProxyCommand='ssh ${var.ssh_bastion_username }@${ var.ssh_bastion_host} -W %h:%p'"]
   }
 
   post-processor "manifest" {

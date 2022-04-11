@@ -8,8 +8,13 @@ concurrency: stackhpc-ci # openstack project
 jobs:
   smslabs:
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./collections/ansible_collections/stackhpc/slurm_image_builder
     steps:
       - uses: actions/checkout@v2
+        with:
+          path: collections/ansible_collections/stackhpc/slurm_image_builder
 
       - name: Setup ssh
         run: |

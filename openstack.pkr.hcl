@@ -52,6 +52,10 @@ variable "ssh_bastion_private_key_file" {
   default = "~/.ssh/id_rsa"
 }
 
+locals {
+  proxy_command = "'ssh ${var.ssh_bastion_username }@${ var.ssh_bastion_host} -W %h:%p'"
+}
+
 source "openstack" "openhpc" {
   flavor = "${var.flavor}"
   networks = "${var.networks}"
@@ -75,8 +79,12 @@ build {
     playbook_file = "playbooks/build.yml" # can't use ansible FQCN here
     use_proxy = false # see https://www.packer.io/docs/provisioners/ansible#troubleshooting
     extra_arguments = ["-v"]
-    # ansible_ssh_common_args: '-o ProxyCommand="ssh {{ bastion_user }}@{{ bastion_ip }} -W %h:%p"'
-    ansible_ssh_extra_args = ["-o ProxyCommand='ssh ${var.ssh_bastion_username }@${ var.ssh_bastion_host} -W %h:%p'"]
+    # ansible equivalent:
+    #   ansible_ssh_common_args: '-o ProxyCommand="ssh {{ bastion_user }}@{{ bastion_ip }} -W %h:%p"'
+    # ansible_ssh_extra_args = ["-o ProxyCommand='ssh ${var.ssh_bastion_username }@${ var.ssh_bastion_host} -W %h:%p'"]
+    # gets mangled on github as:
+    # --ssh-extra-args '-oProxyCommand='ssh slurm-app-ci@185.45.78.150'-W%h:%p'
+    ansible_env_vars = ["ANSIBLE_SSH_ARGS='-o ProxyCommand=${local.proxy_command}'"]
   }
 
   post-processor "manifest" {

@@ -25,14 +25,16 @@
 
 - name: Unpack prometheus binaries
   become: false
-  unarchive:
+  ansible.builtin.unarchive:
+    remote_src: yes
     src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}.tar.gz"
     dest: "/tmp"
     creates: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}/prometheus"
   check_mode: false
 
 - name: Propagate official prometheus and promtool binaries
-  copy:
+  ansible.builtin.copy:
+    remote_src: yes
     src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}/{{ item }}"
     dest: "{{ _prometheus_binary_install_dir }}/{{ item }}"
     mode: 0755
@@ -43,7 +45,7 @@
     - promtool
   
 - name: Propagate official console templates
-  copy:
+  ansible.builtin.copy:
     remote_src: true
     src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}/{{ item }}/"
     dest: "{{ prometheus_config_dir }}/{{ item }}/"

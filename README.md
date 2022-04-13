@@ -6,9 +6,11 @@ The Slurm appliance normally uses a Rocky Linux Generic Cloud image 8.5. It can 
 
 However downloading all the packages and other binaries required can be quite slow, especially on a slow network. The tools here create an OpenStack image which contain the packages and binaries for all cluster nodes, which can be used as an alternative starting point for the Slurm appliance. They contain no configuration and the normal Slurm appliance playbooks must still be run once instance have been deployed with these images.
 
+Images contain the git description of this repo state used to build them in `/var/lib/misc/build.txt`.
+
 # Creating Images
 
-TODO: Run in CI.
+TODO: Describe how to run in CI.
 
 Current manual steps, assuming a Rocky Linux 8.5 host on [sms-lab](https://api.sms-lab.cloud/):
 
@@ -46,8 +48,7 @@ In the Slurm appliance the monitoring stack is installed using `cloudalchemy` ro
 
 ### [cloudalchemy.grafana](https://github.com/cloudalchemy/ansible-grafana)
 
-This role behaves ok and simply no-ops the install if binaries already exist in the image. Note that without the grafana repo file (templated by this tooling), an old version of grafana is installed (from some other repo) which does not appear to read all the config, so the appliance does not set the admin username/password correctly.
-
+This role behaves ok and simply no-ops the install if the correct binaries already exist in the image. The default `grafana_version` is `latest` so the appliance may still download packages if the built image is outdated when the appliance is configured. Note that without the grafana repo file (templated by this tooling), an old version of grafana is installed (from some other repo) which does not appear to read all the config, so the appliance does not set the admin username/password correctly.
 
 ### [cloudalchemy.node_exporter](https://github.com/cloudalchemy/ansible-node-exporter)
 

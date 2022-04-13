@@ -20,9 +20,10 @@
     
     - name: Download last image
       shell:
-        cmd: "openstack image save --file ~/{{image_name }} {{ last_build.artifact_id }}"
+        cmd: |
+          openstack image save --file ~/{{ image_name }} {{ last_build.artifact_id }}
+          ::set-output name=IMAGE_NAME::{{ image_name }}
         creates: "{{ image_name }}"
       vars:
         last_build: "{{ manifest['builds'] | last }}"
         image_name: "{{ (image.stdout | from_json).name }}"
-    

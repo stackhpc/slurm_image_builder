@@ -49,6 +49,7 @@ jobs:
           OS_CLOUD: openstack
       
       - name: Download image
+        id: download
         run: |
           . venv/bin/activate
           ansible-playbook playbooks/download_image.yml 
@@ -58,6 +59,5 @@ jobs:
       - name: Upload image as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: latest-image
-          path: ~/*.qcow2
-        
+          name: ${{ steps.download.outputs.IMAGE_NAME }}
+          path: ~/${{ steps.download.outputs.IMAGE_NAME }}

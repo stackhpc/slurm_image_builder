@@ -52,7 +52,7 @@ jobs:
         id: download
         run: |
           . venv/bin/activate
-          ansible-playbook playbooks/download_image.yml 
+          ansible-playbook -vv playbooks/download_image.yml
         env:
           OS_CLOUD: openstack
       

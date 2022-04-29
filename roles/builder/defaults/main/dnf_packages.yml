@@ -62,6 +62,13 @@ dnf_latest_packages: # list of packages to install using dnf
   - python3-PyMySQL
   - perl-DBD-MySQL
 
+  # https://github.com/stackhpc/ansible-slurm-appliance/blob/main/ansible/roles/firewalld/tasks/install.yml
+  - firewalld
+
+  # https://github.com/stackhpc/ansible-slurm-appliance/blob/main/ansible/roles/fail2ban/tasks/main.yml
+  - fail2ban-server
+  - fail2ban-firewalld
+
 dnf_specific_packages:
   # done separately as @ruby and @nodejs are el8.4 modules which breaks if requiring latest, as for above
   # https://github.com/OSC/ood-ansible/blob/master/vars/Rocky.yml

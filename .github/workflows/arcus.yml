@@ -7,7 +7,6 @@ on:
 concurrency: rcp-cloud-portal-demo # openstack project
 jobs:
   arcus:
-    name: arcus${{ ((matrix.ofed_install == 'true') && '-ofed') || '' }}
     strategy:
       matrix:
         ofed_install: [false, true]

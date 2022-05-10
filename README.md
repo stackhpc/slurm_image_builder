@@ -26,8 +26,6 @@ Current manual steps, assuming a Rocky Linux 8.5 host on [sms-lab](https://api.s
     terraform init
     terraform apply
 
-    # NB: if the port id changes, modify arcus.builder.pkrvars.hcl
-
 1. Build image: `PACKER_LOG=1 packer build --on-error=ask -var-file=arcus.builder.pkrvars.hcl openstack.pkr.hcl`
 
 # Usage of Images

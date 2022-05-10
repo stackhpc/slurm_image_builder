@@ -32,6 +32,12 @@ jobs:
       - name: Install ansible etc
         run: ./setup.sh
 
+      - name: Install terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Initialise terraform
+        run: terraform init
+
       - name: Write clouds.yaml
         run: |
           mkdir -p ~/.config/openstack/
@@ -39,9 +45,13 @@ jobs:
         shell: bash
         env:
           CLOUDS_YAML: ${{ secrets.ARCUS_CLOUDS_YAML }}
-      
+
+      - name: Provision infrastructure
+        run: terraform apply -auto-approve
+        env:
+          OS_CLOUD: openstack
+
       - name: Run image build
-        # NB: assumes port and security groups exist - could improve/use main.tf
         id: image_build
         run: |
           . venv/bin/activate

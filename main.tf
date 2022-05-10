@@ -37,6 +37,11 @@ resource "openstack_networking_port_v2" "builder" {
     }
 }
 
+resource "local_file" "pkrvars" {
+    content  = "port_id = \"${openstack_networking_port_v2.builder.id}\"\n"
+    filename = "${path.module}/arcus.builder.pkrvars.hcl"
+}
+
 output "port_id" {
     value = openstack_networking_port_v2.builder.id
 }

@@ -64,7 +64,7 @@
 
 - name: Run install script
   command:
-    cmd: "{{ ofed_tmp_dir }}/MLNX_OFED_SRC-{{ ofed_version}}/install.pl --hpc"
+    cmd: "{{ ofed_tmp_dir }}/MLNX_OFED_SRC-{{ ofed_version}}/install.pl --{{ ofed_packages }}"
 
 - name: Uninstall build prerequisites # to reduce image size
   dnf:

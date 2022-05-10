@@ -1,12 +1,12 @@
-name: Build images on smslabs:stackhpc-ci
+name: Build images on arcus:rcp-cloud-portal-demo
 on:
   push:
     branches:
       - main
   pull_request:
-concurrency: stackhpc-ci # openstack project
+concurrency: rcp-cloud-portal-demo # openstack project
 jobs:
-  smslabs:
+  arcus:
     runs-on: ubuntu-20.04
     defaults:
       run:
@@ -23,10 +23,10 @@ jobs:
           echo "$SSH_KEY" > ~/.ssh/id_rsa
           chmod 0600 ~/.ssh/id_rsa
         env:
-          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_KEY: ${{ secrets.ARCUS_SSH_KEY }}
 
       - name: Add bastion's ssh key to known_hosts
-        run: cat .github/smslabs_bastion_fingerprint >> ~/.ssh/known_hosts
+        run: cat .github/arcus_bastion_fingerprint >> ~/.ssh/known_hosts
         shell: bash
       
       - name: Install ansible etc
@@ -38,26 +38,13 @@ jobs:
           echo "$CLOUDS_YAML" > ~/.config/openstack/clouds.yaml
         shell: bash
         env:
-          CLOUDS_YAML: ${{ secrets.CLOUDS_YAML }}
+          CLOUDS_YAML: ${{ secrets.ARCUS_CLOUDS_YAML }}
       
       - name: Run image build
+        # NB: assumes port and security groups exist - could improve/use main.tf
         id: image_build
         run: |
           . venv/bin/activate
-          PACKER_LOG=1 packer build --on-error=ask -var-file=smslabs.builder.pkrvars.hcl openstack.pkr.hcl
+          PACKER_LOG=1 packer build --on-error=ask -var-file=arcus.builder.pkrvars.hcl openstack.pkr.hcl
         env:
           OS_CLOUD: openstack
-      
-      - name: Download image
-        id: download
-        run: |
-          . venv/bin/activate
-          ansible-playbook -vv playbooks/download_image.yml
-        env:
-          OS_CLOUD: openstack
-      
-      - name: Upload image as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ steps.download.outputs.IMAGE_NAME }}
-          path: ~/${{ steps.download.outputs.IMAGE_NAME }}

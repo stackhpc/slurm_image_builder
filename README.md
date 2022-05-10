@@ -14,10 +14,21 @@ TODO: Describe how to run in CI.
 
 Current manual steps, assuming a Rocky Linux 8.5 host on [sms-lab](https://api.sms-lab.cloud/):
 
+1. Create an appropriate collections path, e.g:
+
+    mkdir -p collections/ansible_collections/stackhpc/slurm_image_builder
+
 1. Clone the repo
 1. Install environment: `./setup.sh`
 1. Activate venv if necessary: `. venv/bin/activate`
-1. Build image: `PACKER_LOG=1 packer build --on-error=ask -var-file=smslabs.builder.pkrvars.hcl openstack.pkr.hcl`
+1. Create the port:
+
+    terraform init
+    terraform apply
+
+    # NB: if the port id changes, modify arcus.builder.pkrvars.hcl
+
+1. Build image: `PACKER_LOG=1 packer build --on-error=ask -var-file=arcus.builder.pkrvars.hcl openstack.pkr.hcl`
 
 # Usage of Images
 

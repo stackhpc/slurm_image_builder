@@ -26,6 +26,7 @@
 
 - import_tasks: dnf_repos.yml
 - import_tasks: ofed.yml
+  when: "{{ ofed_install | default(false) }}"
 - import_tasks: dnf_packages.yml
 - import_tasks: prometheus.yml
 - import_tasks: nodeexporter.yml

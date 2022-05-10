@@ -65,14 +65,3 @@
 - name: Run install script
   command:
     cmd: "{{ ofed_tmp_dir }}/MLNX_OFED_SRC-{{ ofed_version}}/install.pl --{{ ofed_packages }}"
-
-- name: Uninstall build prerequisites # to reduce image size
-  dnf:
-    name: "{{ ofed_build_deps.results | map('split') | map('last') }}"
-    state: absent
-  # ofed_build_deps.results e.g.:
-  # [
-  #   "Installed: guile-5:2.0.14-7.el8.x86_64",
-  #   "Installed: python3-Cython-0.28.1-3.el8.x86_64",
-  # ..., ]
-  # with all of those being newly-installed (i.e. results is [] if nothing installed.)

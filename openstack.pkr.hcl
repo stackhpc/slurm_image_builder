@@ -2,7 +2,14 @@
 #  $ PACKER_LOG=1 packer build --on-error=ask -var-file=<something>.pkrvars.hcl openstack.pkr.hcl
 
 # "timestamp" template function replacement:s
-locals { timestamp = formatdate("YYMMDD-hhmm", timestamp())}
+locals {
+  timestamp = formatdate("YYMMDD-hhmm", timestamp())
+  # a lookup table to change image name with var.ofed_install:
+  image_name_suffix = {
+    true = "-ofed"
+    false = ""
+  }
+}
 
 variable "source_image_name" {
   type = string
@@ -20,7 +27,12 @@ variable "ssh_bastion_username" {
 }
 
 variable "port_id" {
-  type = string
+  type = string # set by Terraform templating arcus.builder.pkrvars.hcl
+}
+
+variable "ofed_install" {
+  type = string # set by github CI via environment variables
+  default = "false"
 }
 
 source "openstack" "openhpc" {
@@ -33,31 +45,18 @@ source "openstack" "openhpc" {
   ssh_bastion_host = "128.232.222.183"
   ssh_bastion_username = "${var.ssh_bastion_username}"
   ssh_bastion_private_key_file = "~/.ssh/id_rsa"
+  image_name = "${source.name}-${local.timestamp}${local.image_name_suffix[var.ofed_install]}.qcow2"
   ports = [var.port_id]
 }
 
 build {
   source "source.openstack.openhpc" {
-    name = "inbox"
-    image_name = "openhpc-${local.timestamp}.qcow2"
-  }
-  
-  source "source.openstack.openhpc" {
-    name = "ofed"
-    image_name = "openhpc-${local.timestamp}-ofed.qcow2"
   }
 
   provisioner "ansible" {
     playbook_file = "playbooks/build.yml" # can't use ansible FQCN here
     use_proxy = false # see https://www.packer.io/docs/provisioners/ansible#troubleshooting
-    override = {
-      inbox = {
-        extra_arguments = ["-v"]
-      }
-      ofed = {
-        extra_arguments = concat(["-v"], ["-e", "ofed_install=yes"])
-      }
-    }
+    extra_arguments = ["-v", "-e", "ofed_install=${var.ofed_install}"]
     ansible_ssh_extra_args = ["-o ProxyCommand='ssh ${var.ssh_bastion_username }@${ var.ssh_bastion_host} -W %h:%p'"]
   }
 

@@ -7,6 +7,9 @@ on:
 concurrency: rcp-cloud-portal-demo # openstack project
 jobs:
   arcus:
+    strategy:
+      matrix:
+        ofed_install: [false, true]
     runs-on: ubuntu-20.04
     defaults:
       run:
@@ -58,3 +61,4 @@ jobs:
           PACKER_LOG=1 packer build --on-error=ask -var-file=arcus.builder.pkrvars.hcl openstack.pkr.hcl
         env:
           OS_CLOUD: openstack
+          PKR_VAR_ofed_install: ${{ matrix.ofed_install }}

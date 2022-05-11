@@ -63,3 +63,9 @@ jobs:
         env:
           OS_CLOUD: openstack
           PKR_VAR_ofed_install: ${{ matrix.ofed_install }}
+
+      - name: Delete infrastructure
+        run: terraform destroy -auto-approve
+        env:
+          OS_CLOUD: openstack
+        if: ${{ success() || cancelled() }}

@@ -36,7 +36,8 @@ variable "ofed_install" {
 }
 
 source "openstack" "openhpc" {
-  flavor = "vm.alaska.cpu.general.small"
+  flavor = "vm.alaska.cpu.general.tiny"
+  image_min_disk = 20 # GB, matches root disk on above
   source_image_name = "${var.source_image_name}" # NB: must already exist in OpenStack
   ssh_username = "rocky"
   ssh_timeout = "20m"

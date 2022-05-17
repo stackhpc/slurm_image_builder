@@ -14,11 +14,12 @@
     name: '*'
     state: latest
     exclude: "{{ dnf_update_exclude }}"
+  register: dnf_upgrade
 
 - name: Reboot if required due to package upgrades
   reboot:
     post_reboot_delay: 30
-  when: lookup('fileglob', '/var/run/reboot-required') | length > 0
+  when: "(lookup('fileglob', '/var/run/reboot-required') | length > 0) or ('kernel-' in dnf_upgrade.results | join)"
 
 - name: Wait for hosts to be reachable
   wait_for_connection:

@@ -8,9 +8,37 @@
   copy:
     dest: /var/lib/misc/build.txt
     content: "{{ builder_commit.stdout }}"
-    
-- import_tasks: dnf_packages.yml
-- import_tasks: prometheus.yml
-- import_tasks: nodeexporter.yml
-- import_tasks: grafana.yml
-# - meta: end_here # useful for debugging, can rerun
+
+- name: Upgrade base image packages
+  dnf:
+    name: '*'
+    state: latest
+    exclude: "{{ dnf_update_exclude }}"
+  register: dnf_upgrade
+
+- name: Reboot if required due to package upgrades
+  reboot:
+    post_reboot_delay: 30
+  when: "(lookup('fileglob', '/var/run/reboot-required') | length > 0) or ('kernel-' in dnf_upgrade.results | join)"
+
+- name: Wait for hosts to be reachable
+  wait_for_connection:
+    sleep: 15
+
+- name: Enable dnf repos
+  # NB: Doesn't use `dnf config-manager --set-enabled ...` as can't make that idempotent
+  lineinfile:
+    path: "{{ item }}"
+    create: false # raises error if not already installed
+    regexp: enabled=
+    line: enabled=1
+  loop: "{{ dnf_enabled_repos }}"
+
+- name: Install dnf release packages
+  dnf: "{{ item }}"
+  loop: "{{ dnf_release_packages }}"
+
+- import_tasks: ofed.yml
+  when: "ofed_install | default(false) | bool"
+
+# - meta: end_here # useful for debugging, can rerun ansible

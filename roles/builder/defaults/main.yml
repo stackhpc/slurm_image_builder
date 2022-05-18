@@ -1,0 +1,11 @@
+dnf_update_exclude: omit
+dnf_enabled_repos: # list of .repo paths
+  - /etc/yum.repos.d/Rocky-PowerTools.repo
+dnf_release_packages: [] # list of ansible.builtin.dnf args for packages to install before attempting other package installs
+  # e.g. - name: epel-release
+
+ofed_install: false
+ofed_version: 5.6-1.0.3.3
+ofed_download_url: https://content.mellanox.com/ofed/MLNX_OFED-{{ ofed_version }}/MLNX_OFED_SRC-{{ ofed_version }}.tgz
+ofed_tmp_dir: /tmp
+ofed_packages: all

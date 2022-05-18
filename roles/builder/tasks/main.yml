@@ -39,6 +39,6 @@
   loop: "{{ dnf_release_packages }}"
 
 - import_tasks: ofed.yml
-  when: "ofed_install | default(false)"
+  when: "ofed_install | default(false) | bool"
 
 # - meta: end_here # useful for debugging, can rerun ansible

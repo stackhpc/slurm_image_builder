@@ -12,12 +12,16 @@ provider "openstack" {
 }
 
 data "openstack_networking_subnet_v2" "builder" {
-    name =  "WCDC-iLab-60"
+    name =  "bastion"
 }
 
 variable "name" {
     type = string
     default = "slurm_image_builder"
+}
+
+data "openstack_networking_secgroup_v2" "default" {
+  name = "default"
 }
 
 resource "openstack_networking_port_v2" "builder" {
@@ -28,18 +32,17 @@ resource "openstack_networking_port_v2" "builder" {
         subnet_id = data.openstack_networking_subnet_v2.builder.id
     }
     security_group_ids = [
-        "bd9d0a1e-1127-4910-9fb0-232d4dce2c2f", # default
-        "486dfc85-099b-4bbb-9375-60f320a7de18", # SSH
+        data.openstack_networking_secgroup_v2.default.id
     ]
     admin_state_up = "true"
-    binding {
-        vnic_type = "direct"
-    }
+    # binding {
+    #     vnic_type = "direct"
+    # }
 }
 
 resource "local_file" "pkrvars" {
     content  = "port_id = \"${openstack_networking_port_v2.builder.id}\"\n"
-    filename = "${path.module}/arcus.builder.pkrvars.hcl"
+    filename = "${path.module}/builder.pkrvars.hcl"
 }
 
 output "port_id" {

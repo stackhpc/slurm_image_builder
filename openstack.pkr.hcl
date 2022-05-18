@@ -13,17 +13,7 @@ locals {
 
 variable "source_image_name" {
   type = string
-  default = "Rocky-8-GenericCloud-8.6-20220515.x86_64.qcow2"
-}
-
-variable "ssh_bastion_host" {
-  type = string
-  default = "128.232.222.183"
-}
-
-variable "ssh_bastion_username" {
-  type = string
-  default = "slurm-app-ci"
+  default = "Rocky-8-GenericCloud-8.5-20211114.2.x86_64.qcow2" # NB: 8.6 doesn't seem to include sudo!
 }
 
 variable "port_id" {
@@ -31,34 +21,29 @@ variable "port_id" {
 }
 
 variable "ofed_install" {
-  type = string # set by github CI via environment variables
+  type = string # set by CI via environment variables
   default = "false"
 }
 
-source "openstack" "openhpc" {
-  flavor = "vm.alaska.cpu.general.tiny"
-  image_min_disk = 20 # GB, matches root disk on above
+source "openstack" "rocky" {
+  flavor = "m3.medium"
   source_image_name = "${var.source_image_name}" # NB: must already exist in OpenStack
   ssh_username = "rocky"
   ssh_timeout = "20m"
   ssh_private_key_file = "~/.ssh/id_rsa"
-  ssh_keypair_name = "slurm-app-ci"
-  ssh_bastion_host = "128.232.222.183"
-  ssh_bastion_username = "${var.ssh_bastion_username}"
-  ssh_bastion_private_key_file = "~/.ssh/id_rsa"
-  image_name = "${source.name}-${local.timestamp}${local.image_name_suffix[var.ofed_install]}.qcow2"
+  ssh_keypair_name = "rocky_bastion_v2"
+  image_name = "Rocky-8.6-${local.timestamp}${local.image_name_suffix[var.ofed_install]}.qcow2"
   ports = [var.port_id]
 }
 
 build {
-  source "source.openstack.openhpc" {
+  source "source.openstack.rocky" {
   }
 
   provisioner "ansible" {
-    playbook_file = "playbooks/build.yml" # can't use ansible FQCN here
+    playbook_file = "build.yml"
     use_proxy = false # see https://www.packer.io/docs/provisioners/ansible#troubleshooting
     extra_arguments = ["-v", "-e", "ofed_install=${var.ofed_install}"]
-    ansible_ssh_extra_args = ["-o ProxyCommand='ssh ${var.ssh_bastion_username }@${ var.ssh_bastion_host} -W %h:%p'"]
   }
 
   post-processor "manifest" {

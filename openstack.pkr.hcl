@@ -6,7 +6,7 @@ locals {timestamp = formatdate("YYMMDD-hhmm", timestamp())}
 
 variable "source_image_name" {
   type = string
-  default = "Rocky-8-GenericCloud-8.6-20220515.x86_64.qcow2"
+  default = "Rocky-8-GenericCloud-8.5-20211114.2.x86_64"
 }
 
 variable "ssh_bastion_host" {
@@ -42,6 +42,7 @@ build {
     use_proxy = false # see https://www.packer.io/docs/provisioners/ansible#troubleshooting
     extra_arguments = ["-v"]
     ansible_ssh_extra_args = ["-o ProxyCommand='ssh ${var.ssh_bastion_username }@${ var.ssh_bastion_host} -W %h:%p'"]
+    # keep_inventory_file = true
   }
 
   post-processor "manifest" {

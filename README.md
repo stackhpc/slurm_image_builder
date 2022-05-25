@@ -21,11 +21,6 @@ Current manual steps, assuming a Rocky Linux 8.5 host on [sms-lab](https://api.s
 1. Clone the repo
 1. Install environment: `./setup.sh`
 1. Activate venv if necessary: `. venv/bin/activate`
-1. Create the port:
-
-    terraform init
-    terraform apply
-
 1. Build image: `PACKER_LOG=1 packer build --on-error=ask -var-file=arcus.builder.pkrvars.hcl openstack.pkr.hcl`
 
 # Usage of Images

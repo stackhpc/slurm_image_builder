@@ -21,7 +21,7 @@ variable "ssh_bastion_username" {
 
 source "openstack" "openhpc" {
   flavor = "vm.alaska.cpu.general.tiny"
-  networks = ["portal-internal"]
+  networks = ["4b6b2722-ee5b-40ec-8e52-a6610e14cc51"] # portal-internal
   source_image_name = "${var.source_image_name}" # NB: must already exist in OpenStack
   ssh_username = "rocky"
   ssh_timeout = "20m"

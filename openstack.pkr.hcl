@@ -2,14 +2,7 @@
 #  $ PACKER_LOG=1 packer build --on-error=ask -var-file=<something>.pkrvars.hcl openstack.pkr.hcl
 
 # "timestamp" template function replacement:s
-locals {
-  timestamp = formatdate("YYMMDD-hhmm", timestamp())
-  # a lookup table to change image name with var.ofed_install:
-  image_name_suffix = {
-    true = "-ofed"
-    false = ""
-  }
-}
+locals {timestamp = formatdate("YYMMDD-hhmm", timestamp())}
 
 variable "source_image_name" {
   type = string
@@ -28,7 +21,7 @@ variable "ssh_bastion_username" {
 
 source "openstack" "openhpc" {
   flavor = "vm.alaska.cpu.general.tiny"
-  networks = "portal-internal"
+  networks = ["portal-internal"]
   source_image_name = "${var.source_image_name}" # NB: must already exist in OpenStack
   ssh_username = "rocky"
   ssh_timeout = "20m"

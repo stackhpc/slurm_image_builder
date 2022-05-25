@@ -10,9 +10,9 @@ Images contain the git description of this repo state used to build them in `/va
 
 # Creating Images
 
-TODO: Describe how to run in CI.
+For CI, simply trigger the workflow. Built images will be uploaded to Arcus `s3://openhpc-images-prerelease`.
 
-Current manual steps, assuming a Rocky Linux 8.5 host on [sms-lab](https://api.sms-lab.cloud/):
+Current manual steps, assuming a Rocky Linux 8.5 host on Arcus:
 
 1. Create an appropriate collections path, e.g:
 

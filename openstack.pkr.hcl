@@ -30,7 +30,7 @@ source "openstack" "openhpc" {
   ssh_bastion_host = "${var.ssh_bastion_host}"
   ssh_bastion_username = "${var.ssh_bastion_username}"
   ssh_bastion_private_key_file = "~/.ssh/id_rsa"
-  image_name = "${source.name}-${local.timestamp}${local.image_name_suffix[var.ofed_install]}.qcow2"
+  image_name = "${source.name}-${local.timestamp}.qcow2"
 }
 
 build {

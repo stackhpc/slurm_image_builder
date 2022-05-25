@@ -59,7 +59,7 @@ jobs:
       - name: Get created image name from manifest
         id: manifest
         run: |
-          sudo apt-get install jq
+          . venv/bin/activate
           IMAGE_ID=$(jq '.builds[-1].artifact_id' packer-manifest.json)
           IMAGE_NAME=$(openstack image show -f value -c name $IMAGE_ID)
           echo "::set-output name=IMAGE_ID::$IMAGE_ID"

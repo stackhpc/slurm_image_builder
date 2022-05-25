@@ -61,6 +61,9 @@ jobs:
         run: |
           . venv/bin/activate
           IMAGE_ID=$(jq '.builds[-1].artifact_id' packer-manifest.json)
+          while ! openstack image show -f value -c name $IMAGE_ID; do
+            sleep 30
+          done
           IMAGE_NAME=$(openstack image show -f value -c name $IMAGE_ID)
           echo "::set-output name=IMAGE_ID::$IMAGE_ID"
           echo "::set-output name=IMAGE_NAME::$IMAGE_NAME"

@@ -8,7 +8,24 @@
   copy:
     dest: /var/lib/misc/build.txt
     content: "{{ builder_commit.stdout }}"
-    
+
+- name: Upgrade base image packages
+  dnf:
+    name: '*'
+    state: latest
+    exclude: "{{ dnf_update_exclude }}"
+  register: dnf_upgrade
+
+- name: Reboot if required due to package upgrades
+  reboot:
+    post_reboot_delay: 30
+  when: "(lookup('fileglob', '/var/run/reboot-required') | length > 0) or ('kernel-' in dnf_upgrade.results | join)"
+
+- name: Wait for hosts to be reachable
+  wait_for_connection:
+    sleep: 15
+
+- import_tasks: dnf_repos.yml
 - import_tasks: dnf_packages.yml
 - import_tasks: prometheus.yml
 - import_tasks: nodeexporter.yml

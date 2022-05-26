@@ -10,14 +10,18 @@ Images contain the git description of this repo state used to build them in `/va
 
 # Creating Images
 
-TODO: Describe how to run in CI.
+For CI, simply trigger the workflow. Built images will be uploaded to Arcus `s3://openhpc-images-prerelease`.
 
-Current manual steps, assuming a Rocky Linux 8.5 host on [sms-lab](https://api.sms-lab.cloud/):
+Current manual steps, assuming a Rocky Linux 8.5 host on Arcus:
+
+1. Create an appropriate collections path, e.g:
+
+    mkdir -p collections/ansible_collections/stackhpc/slurm_image_builder
 
 1. Clone the repo
 1. Install environment: `./setup.sh`
 1. Activate venv if necessary: `. venv/bin/activate`
-1. Build image: `PACKER_LOG=1 packer build --on-error=ask -var-file=smslabs.builder.pkrvars.hcl openstack.pkr.hcl`
+1. Build image: `PACKER_LOG=1 packer build --on-error=ask -var-file=arcus.builder.pkrvars.hcl openstack.pkr.hcl`
 
 # Usage of Images
 

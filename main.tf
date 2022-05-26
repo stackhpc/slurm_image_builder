@@ -12,7 +12,7 @@ provider "openstack" {
 }
 
 data "openstack_networking_subnet_v2" "builder" {
-    name =  "bastion"
+    name =  "builder" # vlan
 }
 
 variable "name" {
@@ -35,9 +35,14 @@ resource "openstack_networking_port_v2" "builder" {
         data.openstack_networking_secgroup_v2.default.id
     ]
     admin_state_up = "true"
-    # binding {
-    #     vnic_type = "direct"
-    # }
+    binding {
+        vnic_type = "direct"
+        profile = jsonencode(
+            {
+               capabilities = ["switchdev"]
+            }
+        )
+    }
 }
 
 resource "local_file" "pkrvars" {

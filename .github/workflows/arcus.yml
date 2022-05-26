@@ -80,6 +80,7 @@ jobs:
       - name: Upload image to S3 prerelease bucket
         run: |
           echo "$S3_CFG" >  ~/.s3cfg
+          sudo apt-get install s3cmd
           s3cmd put ${{ steps.manifest.outputs.IMAGE_NAME }} s3://openhpc-images-prerelease
         env:
           S3_CFG: ${{ secrets.ARCUS_S3_CFG }}

@@ -22,7 +22,7 @@ variable "port_id" {
 
 variable "ofed_install" {
   type = string # set by CI via environment variables
-  default = "false"
+  default = "true"
 }
 
 source "openstack" "rocky" {

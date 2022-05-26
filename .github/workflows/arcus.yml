@@ -72,8 +72,8 @@ jobs:
 
       - name: Download image to runner
         run: |
-          openstack image --file ${{ steps.manifest.outputs.IMAGE_NAME }} save ${{ steps.manifest.outputs.IMAGE_ID }}
-          echo "$S3_CFG" > ~/.s3cfg
+          . venv/bin/activate
+          openstack image save --file ${{ steps.manifest.outputs.IMAGE_NAME }} ${{ steps.manifest.outputs.IMAGE_ID }}
         env:
           OS_CLOUD: openstack
 

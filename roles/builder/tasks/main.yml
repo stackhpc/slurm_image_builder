@@ -30,4 +30,12 @@
 - import_tasks: prometheus.yml
 - import_tasks: nodeexporter.yml
 - import_tasks: grafana.yml
+
+- name: Delete /etc/resolv.conf
+  # required as if cloud-init (rather than network manager) controls this on next boot it won't be entirely overrwritten
+  file:
+    path: /etc/resolv.conf
+    state: absent
+  become: yes
+
 # - meta: end_here # useful for debugging, can rerun

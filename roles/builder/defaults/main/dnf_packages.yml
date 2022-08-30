@@ -55,13 +55,6 @@ dnf_latest_packages: # list of packages to install using dnf
   # https://github.com/cloudalchemy/ansible-grafana/blob/master/vars/redhat.yml
   - chkconfig
 
-  # https://github.com/geerlingguy/ansible-role-mysql/blob/master/vars/RedHat-8.yml
-  - mariadb
-  - mariadb-server
-  - mariadb-connector-c
-  - python3-PyMySQL
-  - perl-DBD-MySQL
-
 dnf_specific_packages:
   # done separately as @ruby and @nodejs are el8.4 modules which breaks if requiring latest, as for above
   # https://github.com/OSC/ood-ansible/blob/master/vars/Rocky.yml

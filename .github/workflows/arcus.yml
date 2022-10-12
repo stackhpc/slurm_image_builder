@@ -1,8 +1,6 @@
 name: Build images on arcus:rcp-cloud-portal-demo
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
   pull_request:
 concurrency: rcp-cloud-portal-demo # openstack project
 jobs:

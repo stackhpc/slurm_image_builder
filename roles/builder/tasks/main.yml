@@ -38,4 +38,10 @@
     state: absent
   become: yes
 
+- name: Delete injected ssh key
+  file:
+    path: /home/rocky/.ssh/authorized_keys
+    state: absent
+  become: yes
+
 # - meta: end_here # useful for debugging, can rerun

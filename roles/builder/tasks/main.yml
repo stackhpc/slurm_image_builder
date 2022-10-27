@@ -38,5 +38,7 @@
     state: absent
   become: yes
 
+- name: Run cloud-init cleanup
+  command: cloud-init clean --logs --seed
 
 # - meta: end_here # useful for debugging, can rerun

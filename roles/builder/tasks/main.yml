@@ -38,6 +38,12 @@
     state: absent
   become: yes
 
+- name: Delete any injected ssh config for rocky
+  file:
+    path: /home/rocky/.ssh/
+    state: absent
+  become: yes
+
 - name: Run cloud-init cleanup
   command: cloud-init clean --logs --seed
 

@@ -31,6 +31,7 @@ source "openstack" "openhpc" {
   ssh_bastion_username = "${var.ssh_bastion_username}"
   ssh_bastion_private_key_file = "~/.ssh/id_rsa"
   image_name = "${source.name}-${local.timestamp}.qcow2"
+  ssh_clear_authorized_keys = true
 }
 
 build {

@@ -9,6 +9,12 @@
     dest: /var/lib/misc/build.txt
     content: "{{ builder_commit.stdout }}"
 
+- name: Set SELinux state and policy
+  ansible.posix.selinux:
+    state: "{{ selinux_state }}"
+    policy: "{{ selinux_policy }}"
+  register: sestatus
+
 - name: Upgrade base image packages
   dnf:
     name: '*'
@@ -16,10 +22,13 @@
     exclude: "{{ dnf_update_exclude }}"
   register: dnf_upgrade
 
-- name: Reboot if required due to package upgrades
+- name: Reboot if required
   reboot:
     post_reboot_delay: 30
-  when: "(lookup('fileglob', '/var/run/reboot-required') | length > 0) or ('kernel-' in dnf_upgrade.results | join)"
+  when: >-
+    (lookup('fileglob', '/var/run/reboot-required') | length > 0) or
+    ('kernel-' in dnf_upgrade.results | join) or
+    (sestatus.reboot_required | default(false))
 
 - name: Wait for hosts to be reachable
   wait_for_connection:

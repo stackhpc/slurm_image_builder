@@ -65,7 +65,7 @@ dnf_specific_packages:
   - turbovnc-2.2.7
   
   # https://github.com/OSC/ood-ansible/blob/master/tasks/install-rpm.yml
-  - ondemand-2.0.28
+  - ondemand-2.0.29
 
   # NB: firewalld can't be installed in this image as it starts on boot, which is not wanted
 

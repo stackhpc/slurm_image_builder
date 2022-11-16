@@ -12,7 +12,7 @@ provider "openstack" {
 }
 
 data "openstack_networking_subnet_v2" "builder" {
-    name =  "builder" # vlan
+    name =  "WCDC-iLab-60"
 }
 
 variable "name" {
@@ -39,7 +39,7 @@ resource "openstack_networking_port_v2" "builder" {
         vnic_type = "direct"
         profile = jsonencode(
             {
-               capabilities = ["switchdev"]
+              #  capabilities = ["switchdev"]
             }
         )
     }

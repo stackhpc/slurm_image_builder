@@ -13,7 +13,7 @@ locals {
 
 variable "source_image_name" {
   type = string
-  default = "Rocky-8-GenericCloud-8.5-20211114.2.x86_64.qcow2" # NB: 8.6 doesn't seem to include sudo!
+  default = "Rocky-8-GenericCloud-8.6.20220702.0.x86_64.qcow2"
 }
 
 variable "port_id" {
@@ -26,12 +26,10 @@ variable "ofed_install" {
 }
 
 source "openstack" "rocky" {
-  flavor = "m3.medium"
+  flavor = "vm.alaska.cpu.general.small"
   source_image_name = "${var.source_image_name}" # NB: must already exist in OpenStack
   ssh_username = "rocky"
   ssh_timeout = "20m"
-  ssh_private_key_file = "~/.ssh/id_rsa"
-  ssh_keypair_name = "rocky_bastion_v2"
   image_name = "Rocky-8.6-${local.timestamp}${local.image_name_suffix[var.ofed_install]}.qcow2"
   ports = [var.port_id]
 }

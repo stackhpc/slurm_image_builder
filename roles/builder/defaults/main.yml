@@ -5,7 +5,7 @@ dnf_release_packages: [] # list of ansible.builtin.dnf args for packages to inst
   # e.g. - name: epel-release
 
 ofed_install: true
-ofed_version: 5.6-1.0.3.3
+ofed_version: 5.8-1.0.1.1
 ofed_download_url: https://content.mellanox.com/ofed/MLNX_OFED-{{ ofed_version }}/MLNX_OFED_SRC-{{ ofed_version }}.tgz
 ofed_tmp_dir: /tmp
 ofed_packages: all

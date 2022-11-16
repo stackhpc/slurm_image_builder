@@ -41,4 +41,20 @@
 - import_tasks: ofed.yml
   when: "ofed_install | default(false) | bool"
 
+- name: Delete /etc/resolv.conf
+  # required as if cloud-init (rather than network manager) controls this on next boot it won't be entirely overrwritten
+  file:
+    path: /etc/resolv.conf
+    state: absent
+  become: yes
+
+- name: Delete any injected ssh config for rocky
+  file:
+    path: /home/rocky/.ssh/
+    state: absent
+  become: yes
+
+- name: Run cloud-init cleanup
+  command: cloud-init clean --logs --seed
+
 # - meta: end_here # useful for debugging, can rerun ansible

@@ -9,6 +9,17 @@
     dest: /var/lib/misc/build.txt
     content: "{{ builder_commit.stdout }}"
 
+- name: Set SELinux state and policy
+  ansible.posix.selinux:
+    state: "{{ selinux_state }}"
+    policy: "{{ selinux_policy }}"
+  register: sestatus
+
+- name: Set releasever
+  ansible.builtin.copy:
+    dest: /etc/yum/vars/releasever
+    content: "{{ releasever }}"
+
 - name: Upgrade base image packages
   dnf:
     name: '*'
@@ -39,7 +50,7 @@
   loop: "{{ dnf_release_packages }}"
 
 - import_tasks: ofed.yml
-  when: "ofed_install | default(false) | bool"
+  when: "ofed_install | bool"
 
 - name: Delete /etc/resolv.conf
   # required as if cloud-init (rather than network manager) controls this on next boot it won't be entirely overrwritten

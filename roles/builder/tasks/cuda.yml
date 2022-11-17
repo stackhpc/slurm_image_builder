@@ -1,0 +1,30 @@
+# Based on https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#redhat8-installation
+
+- name: Check OFED install is enabled
+  ansible.builtin.assert:
+    that: ofed_install | bool
+    fail_msg: ofed_install must be true to provide the required kernel-* packages
+
+- name: Install cuda repo
+  get_url:
+    dest: "/etc/yum.repos.d/cuda-{{ cuda_distro }}.repo"
+    url: "{{ cuda_repo }}"
+
+- name: Enable cuda module
+  ansible.builtin.command: dnf module enable -y nvidia-driver:latest-dkms
+  register: cuda_module
+  changed_when: "'Nothing to do' not in cuda_module.stdout"
+
+- name: Install cuda packages
+  ansible.builtin.dnf:
+    name: "{{ cuda_packages }}"
+  register: cuda_package_install
+
+- name: Reboot
+  ansible.builtin.reboot:
+    post_reboot_delay: 30
+  when: cuda_package_install.changed
+
+- name: Wait for hosts to be reachable
+  wait_for_connection:
+    sleep: 15

@@ -4,6 +4,14 @@
   dnf: "{{ item }}"
   loop: "{{ dnf_release_packages }}"
 
+- name: Remove minor releasever from repofiles
+  ansible.builtin.replace:
+    path: "{{ item }}"
+    regexp: '\$releasever'
+    replace: "{{ releasever | split('.') | first }}"
+  when: "'.' in releasever"
+  loop: "{{ dnf_repofiles_no_minor_releasever }}"
+
 - name: Install latest dnf packages
   dnf:
     name: "{{ dnf_latest_packages }}"

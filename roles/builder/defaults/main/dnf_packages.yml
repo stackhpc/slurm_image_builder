@@ -16,6 +16,9 @@ dnf_release_packages: # list of ansible.builtin.dnf args for packages to install
   - name: https://yum.osc.edu/ondemand/2.0/ondemand-release-web-2.0-1.noarch.rpm # https://github.com/OSC/ood-ansible/blob/master/defaults/main/install.yml:rpm_repo_url
     disable_gpg_check: yes
 
+dnf_repofiles_no_minor_releasever: # list of repofiles which can't cope with an X.Y releasever
+  - /etc/yum.repos.d/ondemand-web.repo
+
 dnf_latest_packages: # list of packages to install using dnf
   
   # https://github.com/stackhpc/ansible-role-openhpc/blob/master/vars/ohpc-2

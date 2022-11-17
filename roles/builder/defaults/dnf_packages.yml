@@ -62,7 +62,7 @@ dnf_specific_packages:
   - '@nodejs:12'
   
   # https://github.com/stackhpc/ansible-slurm-appliance/blob/main/ansible/roles/openondemand/tasks/vnc_compute.yml
-  - turbovnc-2.2.7
+  - turbovnc-3.0.1
   
   # https://github.com/OSC/ood-ansible/blob/master/tasks/install-rpm.yml
   - ondemand-2.0.29

@@ -1,27 +1,17 @@
-name: Build images on arcus:rcp-cloud-portal-demo
+name: Build Rocky+OFED image on arcus:rcp-cloud-portal-demo
 on:
   push:
     branches:
       - main
   pull_request:
-concurrency: rcp-cloud-portal-demo # openstack project
 jobs:
   arcus:
-    name: arcus${{ ((matrix.ofed_install == 'true') && '-ofed') || '' }}
-    strategy:
-      matrix:
-        ofed_install: ["false", "true"]
     runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: ./collections/ansible_collections/stackhpc/slurm_image_builder
     outputs:
       image_name:  ${{ steps.manifest.outputs.IMAGE_NAME }}
     steps:
       - uses: actions/checkout@v2
-        with:
-          path: collections/ansible_collections/stackhpc/slurm_image_builder
-
+      
       - name: Setup ssh
         run: |
           set -x
@@ -37,12 +27,6 @@ jobs:
       
       - name: Install ansible etc
         run: ./setup.sh
-
-      - name: Install terraform
-        uses: hashicorp/setup-terraform@v1
-
-      - name: Initialise terraform
-        run: terraform init
 
       - name: Write clouds.yaml
         run: |
@@ -61,16 +45,9 @@ jobs:
         id: image_build
         run: |
           . venv/bin/activate
-          PACKER_LOG=1 packer build --on-error=ask -var-file=arcus.builder.pkrvars.hcl openstack.pkr.hcl
+          PACKER_LOG=1 /usr/bin/packer build --on-error=ask -var-file=arcus.pkrvars.hcl openstack.pkr.hcl
         env:
           OS_CLOUD: openstack
-          PKR_VAR_ofed_install: ${{ matrix.ofed_install }}
-
-      - name: Delete infrastructure
-        run: terraform destroy -auto-approve
-        env:
-          OS_CLOUD: openstack
-        if: ${{ success() || cancelled() }}
 
       - name: Get created image name from manifest
         id: manifest
@@ -83,16 +60,16 @@ jobs:
         env:
           OS_CLOUD: openstack
 
-      - name: Download image to runner
-        run: |
-          openstack image --file ${{ steps.manifest.outputs.IMAGE_NAME }} save ${{ steps.manifest.outputs.IMAGE_ID }}
-          echo "$S3_CFG" > ~/.s3cfg
-        env:
-          OS_CLOUD: openstack
+      # - name: Download image to runner
+      #   run: |
+      #     openstack image --file ${{ steps.manifest.outputs.IMAGE_NAME }} save ${{ steps.manifest.outputs.IMAGE_ID }}
+      #     echo "$S3_CFG" > ~/.s3cfg
+      #   env:
+      #     OS_CLOUD: openstack
 
-      - name: Upload image to S3 prerelease bucket
-        run: |
-          echo "$S3_CFG" >  ~/.s3cfg
-          s3cmd put ${{ steps.manifest.outputs.IMAGE_NAME }} s3://openhpc-images-prerelease
-        env:
-          S3_CFG: ${{ secrets.ARCUS_S3_CFG }}
+      # - name: Upload image to S3 prerelease bucket
+      #   run: |
+      #     echo "$S3_CFG" >  ~/.s3cfg
+      #     s3cmd put ${{ steps.manifest.outputs.IMAGE_NAME }} s3://openhpc-images-prerelease
+      #   env:
+      #     S3_CFG: ${{ secrets.ARCUS_S3_CFG }}

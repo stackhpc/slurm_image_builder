@@ -15,6 +15,11 @@
     policy: "{{ selinux_policy }}"
   register: sestatus
 
+- name: Set releasever
+  ansible.builtin.copy:
+    dest: /etc/yum/vars/releasever
+    content: "{{ releasever }}"
+
 - name: Upgrade base image packages
   dnf:
     name: '*'

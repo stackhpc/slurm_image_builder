@@ -1,3 +1,5 @@
+releasever: '8.6'
+
 rpm_keys:
   - https://yum.osc.edu/ondemand/RPM-GPG-KEY-ondemand # https://github.com/OSC/ood-ansible/blob/master/defaults/main/install.yml: rpm_repo_key
 

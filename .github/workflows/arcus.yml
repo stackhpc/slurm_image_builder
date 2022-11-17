@@ -2,19 +2,16 @@ name: Build images on arcus:rcp-cloud-portal-demo
 on:
   workflow_dispatch:
   pull_request:
-concurrency: rcp-cloud-portal-demo # openstack project
 jobs:
   arcus:
     runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: ./collections/ansible_collections/stackhpc/slurm_image_builder
+    # defaults:
+    #   run:
+    #     working-directory: ./collections/ansible_collections/stackhpc/slurm_image_builder
     outputs:
       image_name:  ${{ steps.manifest.outputs.IMAGE_NAME }}
     steps:
       - uses: actions/checkout@v2
-        with:
-          path: collections/ansible_collections/stackhpc/slurm_image_builder
 
       - name: Setup ssh
         run: |
@@ -48,12 +45,6 @@ jobs:
         env:
           OS_CLOUD: openstack
 
-      - name: Delete infrastructure
-        run: terraform destroy -auto-approve
-        env:
-          OS_CLOUD: openstack
-        if: ${{ success() || cancelled() }}
-
       - name: Get created image name from manifest
         id: manifest
         run: |
@@ -68,12 +59,12 @@ jobs:
         env:
           OS_CLOUD: openstack
 
-      - name: Download image to runner
-        run: |
-          . venv/bin/activate
-          openstack image save --file ${{ steps.manifest.outputs.IMAGE_NAME }} ${{ steps.manifest.outputs.IMAGE_ID }}
-        env:
-          OS_CLOUD: openstack
+      # - name: Download image to runner
+      #   run: |
+      #     . venv/bin/activate
+      #     openstack image save --file ${{ steps.manifest.outputs.IMAGE_NAME }} ${{ steps.manifest.outputs.IMAGE_ID }}
+      #   env:
+      #     OS_CLOUD: openstack
 
       # - name: Upload image to S3 release bucket
       #   run: |

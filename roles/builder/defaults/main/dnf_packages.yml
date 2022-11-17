@@ -61,10 +61,10 @@ dnf_latest_packages: # list of packages to install using dnf
   - chkconfig
 
 dnf_specific_packages:
-  # done separately as @ruby and @nodejs are el8.4 modules which breaks if requiring latest, as for above
+  # done separately as @ruby and @nodejs are EL modules which breaks if requiring latest, as for above
   # https://github.com/OSC/ood-ansible/blob/master/vars/Rocky.yml
   - '@ruby:2.7'
-  - '@nodejs:12'
+  - '@nodejs:14'
   
   # https://github.com/stackhpc/ansible-slurm-appliance/blob/main/ansible/roles/openondemand/tasks/vnc_compute.yml
   - turbovnc-3.0.1

@@ -1,3 +1,12 @@
+cuda_install: true
+cuda_distro: rhel8
+cuda_repo: "https://developer.download.nvidia.com/compute/cuda/repos/{{ cuda_distro }}/x86_64/cuda-{{ cuda_distro }}.repo"
+cuda_repo_key: https://developer.download.nvidia.com/compute/cuda/repos/fedora32/x86_64/D42D0685.pub
+cuda_packages:
+  - cuda
+  - nvidia-gds
+
+dnf_update: true
 dnf_update_exclude: omit
 dnf_enabled_repos: # list of .repo paths
   - /etc/yum.repos.d/Rocky-PowerTools.repo

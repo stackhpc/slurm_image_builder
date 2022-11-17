@@ -26,11 +26,12 @@
     state: latest
     exclude: "{{ dnf_update_exclude }}"
   register: dnf_upgrade
+  when: "dnf_update | bool"
 
 - name: Reboot if required due to package upgrades
   reboot:
     post_reboot_delay: 30
-  when: "(lookup('fileglob', '/var/run/reboot-required') | length > 0) or ('kernel-' in dnf_upgrade.results | join)"
+  when: "(lookup('fileglob', '/var/run/reboot-required') | length > 0) or ('kernel-' in (dnf_upgrade.results | default([])) | join)"
 
 - name: Wait for hosts to be reachable
   wait_for_connection:
@@ -51,6 +52,9 @@
 
 - import_tasks: ofed.yml
   when: "ofed_install | bool"
+
+- import_tasks: cuda.yml
+  when: "cuda_install | bool"
 
 - name: Delete /etc/resolv.conf
   # required as if cloud-init (rather than network manager) controls this on next boot it won't be entirely overrwritten

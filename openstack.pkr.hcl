@@ -32,6 +32,7 @@ build {
   provisioner "ansible" {
     playbook_file = "build.yml"
     use_proxy = false # see https://www.packer.io/docs/provisioners/ansible#troubleshooting
+    extra_arguments = ["-v"]
   }
 
   post-processor "manifest" {

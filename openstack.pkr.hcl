@@ -1,7 +1,5 @@
 # "timestamp" template function replacement:s
-locals {
-  timestamp = formatdate("YYMMDD-hhmm", timestamp())
-}
+locals {timestamp = formatdate("YYMMDD-hhmm", timestamp())}
 
 variable "source_image_name" {
   type = string

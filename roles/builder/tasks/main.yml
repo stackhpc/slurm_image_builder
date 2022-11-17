@@ -31,7 +31,10 @@
 - name: Reboot if required due to package upgrades
   reboot:
     post_reboot_delay: 30
-  when: "(lookup('fileglob', '/var/run/reboot-required') | length > 0) or ('kernel-' in (dnf_upgrade.results | default([])) | join)"
+  when: >-
+    (lookup('fileglob', '/var/run/reboot-required') | length > 0) or
+    ('kernel-' in (dnf_upgrade.results | default([])) | join)" or
+    (sestatus.reboot_required | default(false))
 
 - name: Wait for hosts to be reachable
   wait_for_connection:
@@ -72,4 +75,4 @@
 - name: Run cloud-init cleanup
   command: cloud-init clean --logs --seed
 
-# - meta: end_here # useful for debugging, can rerun ansible
+# - meta: end_here # useful for debugging, can rerun

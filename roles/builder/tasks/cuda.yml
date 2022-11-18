@@ -10,10 +10,15 @@
     dest: "/etc/yum.repos.d/cuda-{{ cuda_distro }}.repo"
     url: "{{ cuda_repo }}"
 
-- name: Enable cuda module
+- name: Enable nvidia driver module
   ansible.builtin.command: dnf module enable -y nvidia-driver:latest-dkms
-  register: cuda_module
-  changed_when: "'Nothing to do' not in cuda_module.stdout"
+  register: nvidiadriver_enable
+  changed_when: "'Nothing to do' not in nvidiadriver_enable.stdout"
+
+- name: Install nvidia driver module
+  ansible.builtin.command: dnf module install -y nvidia-driver:latest-dkms
+  register: nvidiadriver_install
+  changed_when: "'Nothing to do' not in nvidiadriver_install.stdout"
 
 - name: Install cuda packages
   ansible.builtin.dnf:

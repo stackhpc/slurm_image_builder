@@ -33,7 +33,7 @@
     post_reboot_delay: 30
   when: >-
     (lookup('fileglob', '/var/run/reboot-required') | length > 0) or
-    ('kernel-' in (dnf_upgrade.results | default([])) | join)" or
+    ('kernel-' in (dnf_upgrade.results | default([])) | join) or
     (sestatus.reboot_required | default(false))
 
 - name: Wait for hosts to be reachable

@@ -3,5 +3,4 @@
   gather_facts: no
   tasks:
     - import_role:
-        name: stackhpc.slurm_image_builder.builder
-  
+        name: builder

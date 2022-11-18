@@ -15,30 +15,49 @@
     policy: "{{ selinux_policy }}"
   register: sestatus
 
+- name: Set releasever
+  ansible.builtin.copy:
+    dest: /etc/yum/vars/releasever
+    content: "{{ releasever }}"
+
 - name: Upgrade base image packages
   dnf:
     name: '*'
     state: latest
     exclude: "{{ dnf_update_exclude }}"
   register: dnf_upgrade
+  when: "dnf_update | bool"
 
-- name: Reboot if required
+- name: Reboot if required due to package upgrades
   reboot:
     post_reboot_delay: 30
   when: >-
     (lookup('fileglob', '/var/run/reboot-required') | length > 0) or
-    ('kernel-' in dnf_upgrade.results | join) or
+    ('kernel-' in (dnf_upgrade.results | default([])) | join) or
     (sestatus.reboot_required | default(false))
 
 - name: Wait for hosts to be reachable
   wait_for_connection:
     sleep: 15
 
-- import_tasks: dnf_repos.yml
-- import_tasks: dnf_packages.yml
-- import_tasks: prometheus.yml
-- import_tasks: nodeexporter.yml
-- import_tasks: grafana.yml
+- name: Enable dnf repos
+  # NB: Doesn't use `dnf config-manager --set-enabled ...` as can't make that idempotent
+  lineinfile:
+    path: "{{ item }}"
+    create: false # raises error if not already installed
+    regexp: enabled=
+    line: enabled=1
+  loop: "{{ dnf_enabled_repos }}"
+
+- name: Install dnf release packages
+  dnf: "{{ item }}"
+  loop: "{{ dnf_release_packages }}"
+
+- import_tasks: ofed.yml
+  when: "ofed_install | bool"
+
+- import_tasks: cuda.yml
+  when: "cuda_install | bool"
 
 - name: Delete /etc/resolv.conf
   # required as if cloud-init (rather than network manager) controls this on next boot it won't be entirely overrwritten

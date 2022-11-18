@@ -14,11 +14,6 @@ variable "network_ids" {
   type = list(string)
 }
 
-variable "ansible_extra_args" {
-  type = string
-  default = ""
-}
-
 source "openstack" "rocky" {
   flavor = var.flavor_name
   source_image_name = var.source_image_name
@@ -35,7 +30,7 @@ build {
   provisioner "ansible" {
     playbook_file = "build.yml"
     use_proxy = false # see https://www.packer.io/docs/provisioners/ansible#troubleshooting
-    extra_arguments = ["-v", var.ansible_extra_args]
+    extra_arguments = ["-v"]
   }
 
   post-processor "manifest" {

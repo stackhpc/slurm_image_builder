@@ -36,16 +36,11 @@ jobs:
         env:
           CLOUDS_YAML: ${{ secrets.ARCUS_CLOUDS_YAML }}
 
-      - name: Provision infrastructure
-        run: terraform apply -auto-approve
-        env:
-          OS_CLOUD: openstack
-
       - name: Run image build
         id: image_build
         run: |
           . venv/bin/activate
-          PACKER_LOG=1 /usr/bin/packer build --on-error=ask -var-file=arcus.pkrvars.hcl openstack.pkr.hcl
+          PACKER_LOG=1 packer build --on-error=ask -var-file=arcus.pkrvars.hcl openstack.pkr.hcl
         env:
           OS_CLOUD: openstack
 

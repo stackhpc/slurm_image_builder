@@ -1,3 +1,5 @@
+releasever: '8.6'
+
 rpm_keys:
   - https://yum.osc.edu/ondemand/RPM-GPG-KEY-ondemand # https://github.com/OSC/ood-ansible/blob/master/defaults/main/install.yml: rpm_repo_key
 
@@ -13,6 +15,9 @@ dnf_release_packages: # list of ansible.builtin.dnf args for packages to install
     disable_gpg_check: yes
   - name: https://yum.osc.edu/ondemand/2.0/ondemand-release-web-2.0-1.noarch.rpm # https://github.com/OSC/ood-ansible/blob/master/defaults/main/install.yml:rpm_repo_url
     disable_gpg_check: yes
+
+dnf_repofiles_no_minor_releasever: # list of repofiles which can't cope with an X.Y releasever
+  - /etc/yum.repos.d/ondemand-web.repo
 
 dnf_latest_packages: # list of packages to install using dnf
   
@@ -35,8 +40,8 @@ dnf_latest_packages: # list of packages to install using dnf
 
   # https://github.com/stackhpc/ansible-slurm-appliance/blob/main/environments/common/inventory/group_vars/all/openhpc.yml
   - slurm-libpmi-ohpc
-  - ohpc-gnu9-openmpi4-perf-tools
-  - openblas-gnu9-ohpc
+  - ohpc-gnu12-openmpi4-perf-tools # for hpctests
+  - openblas-gnu12-ohpc # for hpctests (HPL)
 
   # https://github.com/OSC/ood-ansible/blob/master/vars/Rocky.yml
   - lua-posix
@@ -56,16 +61,16 @@ dnf_latest_packages: # list of packages to install using dnf
   - chkconfig
 
 dnf_specific_packages:
-  # done separately as @ruby and @nodejs are el8.4 modules which breaks if requiring latest, as for above
+  # done separately as @ruby and @nodejs are EL modules which breaks if requiring latest, as for above
   # https://github.com/OSC/ood-ansible/blob/master/vars/Rocky.yml
   - '@ruby:2.7'
-  - '@nodejs:12'
+  - '@nodejs:14'
   
   # https://github.com/stackhpc/ansible-slurm-appliance/blob/main/ansible/roles/openondemand/tasks/vnc_compute.yml
-  - turbovnc-2.2.7
+  - turbovnc-3.0.1
   
   # https://github.com/OSC/ood-ansible/blob/master/tasks/install-rpm.yml
-  - ondemand
+  - ondemand-2.0.29
 
   # NB: firewalld can't be installed in this image as it starts on boot, which is not wanted
 

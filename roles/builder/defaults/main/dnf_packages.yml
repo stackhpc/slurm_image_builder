@@ -1,5 +1,3 @@
-releasever: '8.6'
-
 rpm_keys:
   - https://yum.osc.edu/ondemand/RPM-GPG-KEY-ondemand # https://github.com/OSC/ood-ansible/blob/master/defaults/main/install.yml: rpm_repo_key
 
@@ -14,6 +12,9 @@ dnf_release_packages: # list of ansible.builtin.dnf args for packages to install
   - name: http://repos.openhpc.community/OpenHPC/2/CentOS_8/x86_64/ohpc-release-2-1.el8.x86_64.rpm # https://github.com/stackhpc/ansible-role-openhpc/blob/master/tasks/install.yml
     disable_gpg_check: yes
   - name: https://yum.osc.edu/ondemand/2.0/ondemand-release-web-2.0-1.noarch.rpm # https://github.com/OSC/ood-ansible/blob/master/defaults/main/install.yml:rpm_repo_url
+    disable_gpg_check: yes
+  # workaround https://github.com/openhpc/ohpc/issues/1644:
+  - name: https://github.com/apptainer/apptainer/releases/download/v1.1.3/apptainer-1.1.3-1.x86_64.rpm
     disable_gpg_check: yes
 
 dnf_repofiles_no_minor_releasever: # list of repofiles which can't cope with an X.Y releasever

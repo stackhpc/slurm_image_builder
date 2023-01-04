@@ -6,7 +6,7 @@ locals {timestamp = formatdate("YYMMDD-hhmm", timestamp())}
 
 variable "source_image_name" {
   type = string
-  default = "Rocky-8-GenericCloud-8.6.20220702.0.x86_64.qcow2"
+  default = "Rocky-8-GenericCloud-Base-8.7-20221130.0.x86_64.qcow2"
 }
 
 variable "ssh_bastion_host" {

@@ -21,7 +21,7 @@ Current manual steps, assuming a Rocky Linux 8.5 host on Arcus:
 1. Clone the repo
 1. Install environment: `./setup.sh`
 1. Activate venv if necessary: `. venv/bin/activate`
-1. Build image: `PACKER_LOG=1 packer build --on-error=ask -var-file=arcus.builder.pkrvars.hcl openstack.pkr.hcl`
+1. Build image: `PACKER_LOG=1 packer build --on-error=ask openstack.pkr.hcl`
 
 # Usage of Images
 

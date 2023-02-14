@@ -37,9 +37,12 @@ dnf_latest_packages: # list of packages to install using dnf
   - "slurm-slurmdbd-ohpc"
 
   # https://github.com/stackhpc/ansible-slurm-appliance/blob/main/environments/common/inventory/group_vars/all/openhpc.yml
+  - podman
   - slurm-libpmi-ohpc
   - ohpc-gnu12-openmpi4-perf-tools # for hpctests
   - openblas-gnu12-ohpc # for hpctests (HPL)
+  - apptainer
+  - podman-compose
 
   # https://github.com/OSC/ood-ansible/blob/master/vars/Rocky.yml
   - lua-posix

@@ -9,6 +9,8 @@
     dest: /var/lib/misc/build.txt
     content: "{{ builder_commit.stdout }}"
 
+- import_tasks: users.yml
+
 - name: Set SELinux state and policy
   ansible.posix.selinux:
     state: "{{ selinux_state }}"

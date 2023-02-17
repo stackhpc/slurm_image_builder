@@ -1,6 +1,4 @@
 
-prometheus_db_dir: /var/lib/prometheus # will get moved to appliances state dir by appliance
-
 # from environments/common/inventory/group_vars/all/defaults.yml:
 
 appliances_local_users_ansible_user_name: "{{ ansible_ssh_user | default(ansible_user) }}"

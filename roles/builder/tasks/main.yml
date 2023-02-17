@@ -9,6 +9,8 @@
     dest: /var/lib/misc/build.txt
     content: "{{ builder_commit.stdout }}"
 
+- import_tasks: users.yml
+
 - name: Set SELinux state and policy
   ansible.posix.selinux:
     state: "{{ selinux_state }}"
@@ -39,6 +41,9 @@
 - import_tasks: prometheus.yml
 - import_tasks: nodeexporter.yml
 - import_tasks: grafana.yml
+
+- name: Remove dnf caches
+  command: dnf clean all
 
 - name: Delete /etc/resolv.conf
   # required as if cloud-init (rather than network manager) controls this on next boot it won't be entirely overrwritten

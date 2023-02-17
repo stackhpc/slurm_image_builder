@@ -3,6 +3,7 @@ go_arch: amd64
 # https://github.com/cloudalchemy/ansible-prometheus/blob/master/defaults/main.yml
 prometheus_version: 2.27.0
 prometheus_config_dir: /etc/prometheus
+prometheus_db_dir: /var/lib/prometheus # will get moved to appliances state dir by appliance
 
 # https://github.com/cloudalchemy/ansible-prometheus/blob/master/vars/main.yml
 _prometheus_binary_install_dir: '/usr/local/bin'
